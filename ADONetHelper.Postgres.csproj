@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/rgarrison12345/ADONetHelper.Postgres.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>2.1.3</Version>
+    <Version>2.1.4</Version>
     <PackageTags>Postgres Postgresql Npgsql ORM ADO.NET ADO SQL .NET Database RDBMS Generic DAL ANSI</PackageTags>
     <Copyright>Copyright © Robert Garrison 2018</Copyright>
     <Authors>Robert Garrison</Authors>
@@ -19,7 +19,7 @@
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <Description>Extends ADONetHelper library to Postgres</Description>
-    <PackageReleaseNotes>Updating to ADONetHelper 3.1.2</PackageReleaseNotes>
+    <PackageReleaseNotes>Updating to ADONetHelper 3.1.3</PackageReleaseNotes>
     <AssemblyName>ADONetHelper.Postgres</AssemblyName>
     <RootNamespace>ADONetHelper.Postgres</RootNamespace>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\ADONetHelper.Postgres.xml</DocumentationFile>
@@ -31,7 +31,7 @@
   <ItemGroup>
     <None Include="LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
     <PackageReference Include="Npgsql" Version="4.0.3" />
-    <PackageReference Include="ADONetHelper" Version="3.1.2" />
+    <PackageReference Include="ADONetHelper" Version="3.1.3" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugSymbols>true</DebugSymbols>
