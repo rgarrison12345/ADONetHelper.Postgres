@@ -23,6 +23,7 @@ SOFTWARE*/
 #endregion
 #region Using Statements
 using Npgsql;
+using Npgsql.TypeMapping;
 using System;
 using System.Data;
 using System.Net.Security;
@@ -103,6 +104,30 @@ namespace ADONetHelper.Postgres
             {
                 //Return this back to the caller
                 return (NpgsqlConnection)this.ExecuteSQL.Connection;
+            }
+        }
+        /// <summary>
+        /// The connection specific type mapper, all modifications affect the current connection only and all changes are lost when the connection closes
+        /// </summary>
+        public INpgsqlTypeMapper TypeMapper
+        {
+            get
+            {
+                return this.Connection.TypeMapper;
+            }
+        }
+        /// <summary>
+        /// Gets or sets the delegate used to generate a password for new database connections
+        /// </summary>
+        public ProvidePasswordCallback ProvidePasswordCallback
+        {
+            get
+            {
+                return this.Connection.ProvidePasswordCallback;
+            }
+            set
+            {
+                this.Connection.ProvidePasswordCallback = value;
             }
         }
         /// <summary>
@@ -299,6 +324,25 @@ namespace ADONetHelper.Postgres
         }
         #endregion
         #region Utility Methods
+#if !NET461 && !NETSTANDARD2_0
+        /// <summary>
+        /// Asynchronously changes the current database for the current connection
+        /// </summary>
+        /// <param name="databaseName"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task ChangeDatabaseAsync(string databaseName, CancellationToken token = default)
+        {
+            await this.Connection.ChangeDatabaseAsync(databaseName, token).ConfigureAwait(false);
+        }
+#endif
+        /// <summary>
+        /// Closes the asynchronous.
+        /// </summary>
+        public async Task CloseAsync()
+        {
+            await this.Connection.CloseAsync().ConfigureAwait(false);
+        }
         /// <summary>
         /// Unprepares all statements on the current <see cref="NpgsqlConnection"/>
         /// </summary>
@@ -332,19 +376,11 @@ namespace ADONetHelper.Postgres
             this.Connection.Wait(timeout);
         }
         /// <summary>
-        /// Waits this instance.
-        /// </summary>
-        public async Task WaitAsync()
-        {
-            //Go ahead and wait
-            await this.WaitAsync(CancellationToken.None).ConfigureAwait(false);
-        }
-        /// <summary>
         /// Waits the asynchronous.
         /// </summary>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        public async Task WaitAsync(CancellationToken token)
+        public async Task WaitAsync(CancellationToken token = default)
         {
             //Go ahead and wait for an event
             await this.Connection.WaitAsync(token).ConfigureAwait(false);
@@ -353,7 +389,7 @@ namespace ADONetHelper.Postgres
         /// Flushes the type cache for this <see cref="NpgsqlConnection"/> <see cref="NpgsqlConnection.ConnectionString"/> and reloads types for this connection only
         /// </summary>
         public void ReloadTypes()
-        {
+        { 
             //Go and reload the types for this connection
             this.Connection.ReloadTypes();
         }
