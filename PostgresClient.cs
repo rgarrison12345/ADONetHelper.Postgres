@@ -22,6 +22,7 @@ OUT Of Or In CONNECTION With THE SOFTWARE Or THE USE Or OTHER DEALINGS In THE
 SOFTWARE*/
 #endregion
 #region Using Statements
+using ADONetHelper.Core;
 using Npgsql;
 using Npgsql.TypeMapping;
 using System;
@@ -51,17 +52,17 @@ namespace ADONetHelper.Postgres
             add
             {
                 //Get an exclusive lock
-                lock (this.Connection)
+                lock (Connection)
                 {
-                    this.Connection.Notice += value;
+                    Connection.Notice += value;
                 }
             }
             remove
             {
                 //Get an exclusive lock
-                lock (this.Connection)
+                lock (Connection)
                 {
-                    this.Connection.Notice -= value;
+                    Connection.Notice -= value;
                 }
             }
         }
@@ -76,17 +77,17 @@ namespace ADONetHelper.Postgres
             add
             {
                 //Get an exclusive lock
-                lock (this.Connection)
+                lock (Connection)
                 {
-                    this.Connection.Notification += value;
+                    Connection.Notification += value;
                 }
             }
             remove
             {
                 //Get an exclusive lock
-                lock (this.Connection)
+                lock (Connection)
                 {
-                    this.Connection.Notification -= value;
+                    Connection.Notification -= value;
                 }
             }
         }
@@ -103,7 +104,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return (NpgsqlConnection)this.ExecuteSQL.Connection;
+                return (NpgsqlConnection)ExecuteSQL.Connection;
             }
         }
         /// <summary>
@@ -113,7 +114,7 @@ namespace ADONetHelper.Postgres
         {
             get
             {
-                return this.Connection.TypeMapper;
+                return Connection.TypeMapper;
             }
         }
         /// <summary>
@@ -123,11 +124,11 @@ namespace ADONetHelper.Postgres
         {
             get
             {
-                return this.Connection.ProvidePasswordCallback;
+                return Connection.ProvidePasswordCallback;
             }
             set
             {
-                this.Connection.ProvidePasswordCallback = value;
+                Connection.ProvidePasswordCallback = value;
             }
         }
         /// <summary>
@@ -142,12 +143,12 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.ProvideClientCertificatesCallback;
+                return Connection.ProvideClientCertificatesCallback;
             }
             set
             {
                 //Set the value
-                this.Connection.ProvideClientCertificatesCallback = value;
+                Connection.ProvideClientCertificatesCallback = value;
             }
         }
         /// <summary>
@@ -162,11 +163,11 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.UserCertificateValidationCallback;
+                return Connection.UserCertificateValidationCallback;
             }
             set
             {
-                this.Connection.UserCertificateValidationCallback = value;
+                Connection.UserCertificateValidationCallback = value;
             }
         }
         /// <summary>
@@ -180,7 +181,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.Timezone;
+                return Connection.Timezone;
             }
         }
         /// <summary>
@@ -195,7 +196,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.HasIntegerDateTimes;
+                return Connection.HasIntegerDateTimes;
             }
         }
         /// <summary>
@@ -209,7 +210,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.Port;
+                return Connection.Port;
             }
         }
         /// <summary>
@@ -223,7 +224,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.PostgreSqlVersion;
+                return Connection.PostgreSqlVersion;
             }
         }
         /// <summary>
@@ -237,7 +238,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.Host;
+                return Connection.Host;
             }
         }
         /// <summary>
@@ -251,7 +252,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.ProcessID;
+                return Connection.ProcessID;
             }
         }
         /// <summary>
@@ -265,7 +266,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.IntegratedSecurity;
+                return Connection.IntegratedSecurity;
             }
         }
         /// <summary>
@@ -279,7 +280,7 @@ namespace ADONetHelper.Postgres
             get
             {
                 //Return this back to the caller
-                return this.Connection.UserName;
+                return Connection.UserName;
             }
         }
         #endregion
@@ -333,7 +334,28 @@ namespace ADONetHelper.Postgres
         /// <returns></returns>
         public async Task ChangeDatabaseAsync(string databaseName, CancellationToken token = default)
         {
-            await this.Connection.ChangeDatabaseAsync(databaseName, token).ConfigureAwait(false);
+            await Connection.ChangeDatabaseAsync(databaseName, token).ConfigureAwait(false);
+        }
+        /// <summary>
+        /// Begins the transaction asynchronous.
+        /// </summary>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async ValueTask<NpgsqlTransaction> BeginTransactionAsync(CancellationToken token = default)
+        {
+            //Return this back to the caller
+            return await Connection.BeginTransactionAsync(token);
+        }
+        /// <summary>
+        /// Begins the transaction asynchronous.
+        /// </summary>
+        /// <param name="levl">The levl.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public async ValueTask<NpgsqlTransaction> BeginTransactionAsync(IsolationLevel levl, CancellationToken token = default)
+        {
+            //Return this back to the caller
+            return await Connection.BeginTransactionAsync(levl, token);
         }
 #endif
         /// <summary>
@@ -341,14 +363,14 @@ namespace ADONetHelper.Postgres
         /// </summary>
         public async Task CloseAsync()
         {
-            await this.Connection.CloseAsync().ConfigureAwait(false);
+            await Connection.CloseAsync().ConfigureAwait(false);
         }
         /// <summary>
         /// Unprepares all statements on the current <see cref="NpgsqlConnection"/>
         /// </summary>
         public void UnPrepareAllStatements()
         {
-            this.Connection.UnprepareAll();
+            Connection.UnprepareAll();
         }
         /// <summary>
         /// Waits this instance.
@@ -356,7 +378,7 @@ namespace ADONetHelper.Postgres
         public void Wait()
         {
             //Go ahead and wait
-            this.Connection.Wait();
+            Connection.Wait();
         }
         /// <summary>
         /// Waits the specified timeout.
@@ -365,7 +387,7 @@ namespace ADONetHelper.Postgres
         public void Wait(int timeout)
         {
             //Go ahead and wait for an event
-            this.Connection.Wait(timeout);
+            Connection.Wait(timeout);
         }
         /// <summary>
         /// Waits the specified timeout.
@@ -373,7 +395,7 @@ namespace ADONetHelper.Postgres
         /// <param name="timeout">The timeout.</param>
         public void Wait(TimeSpan timeout)
         {
-            this.Connection.Wait(timeout);
+            Connection.Wait(timeout);
         }
         /// <summary>
         /// Waits the asynchronous.
@@ -383,15 +405,15 @@ namespace ADONetHelper.Postgres
         public async Task WaitAsync(CancellationToken token = default)
         {
             //Go ahead and wait for an event
-            await this.Connection.WaitAsync(token).ConfigureAwait(false);
+            await Connection.WaitAsync(token).ConfigureAwait(false);
         }
         /// <summary>
         /// Flushes the type cache for this <see cref="NpgsqlConnection"/> <see cref="NpgsqlConnection.ConnectionString"/> and reloads types for this connection only
         /// </summary>
         public void ReloadTypes()
-        { 
+        {
             //Go and reload the types for this connection
-            this.Connection.ReloadTypes();
+            Connection.ReloadTypes();
         }
         /// <summary>
         /// Gets the raw copy stream.
@@ -401,7 +423,7 @@ namespace ADONetHelper.Postgres
         public NpgsqlRawCopyStream GetRawCopyStream(string copyCommand)
         {
             //Return this back to the caller
-            return this.Connection.BeginRawBinaryCopy(copyCommand);
+            return Connection.BeginRawBinaryCopy(copyCommand);
         }
         /// <summary>
         /// Gets the text exporter.
@@ -411,7 +433,7 @@ namespace ADONetHelper.Postgres
         public NpgsqlCopyTextReader GetTextExporter(string copyToCommand)
         {
             //Return this back to the caller
-            return (NpgsqlCopyTextReader)this.Connection.BeginTextExport(copyToCommand);
+            return (NpgsqlCopyTextReader)Connection.BeginTextExport(copyToCommand);
         }
         /// <summary>
         /// Gets the text importer.
@@ -421,7 +443,7 @@ namespace ADONetHelper.Postgres
         public NpgsqlCopyTextWriter GetTextImporter(string copyFromCommand)
         {
             //Return this back to the caller
-            return (NpgsqlCopyTextWriter)this.Connection.BeginTextImport(copyFromCommand);
+            return (NpgsqlCopyTextWriter)Connection.BeginTextImport(copyFromCommand);
         }
         /// <summary>
         /// Gets the binary exporter.
@@ -431,7 +453,7 @@ namespace ADONetHelper.Postgres
         public NpgsqlBinaryExporter GetBinaryExporter(string copyToCommand)
         {
             //Return this back to the caller
-            return this.Connection.BeginBinaryExport(copyToCommand);
+            return Connection.BeginBinaryExport(copyToCommand);
         }
         /// <summary>
         /// Gets the binary importer.
@@ -441,7 +463,7 @@ namespace ADONetHelper.Postgres
         public NpgsqlBinaryImporter GetBinaryImporter(string copyFromCommand)
         {
             //Return this back to the caller
-            return this.Connection.BeginBinaryImport(copyFromCommand);
+            return Connection.BeginBinaryImport(copyFromCommand);
         }
         #endregion
     }
