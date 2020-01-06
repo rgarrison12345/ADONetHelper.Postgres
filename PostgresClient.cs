@@ -1,6 +1,6 @@
 ﻿#region Licenses
 /*MIT License
-Copyright(c) 2019
+Copyright(c) 2020
 Robert Garrison
 
 Permission Is hereby granted, free Of charge, To any person obtaining a copy
@@ -344,7 +344,7 @@ namespace ADONetHelper.Postgres
         public async ValueTask<NpgsqlTransaction> BeginTransactionAsync(CancellationToken token = default)
         {
             //Return this back to the caller
-            return await Connection.BeginTransactionAsync(token);
+            return await Connection.BeginTransactionAsync(token).ConfigureAwait(false);
         }
         /// <summary>
         /// Begins the transaction asynchronous.
@@ -355,7 +355,7 @@ namespace ADONetHelper.Postgres
         public async ValueTask<NpgsqlTransaction> BeginTransactionAsync(IsolationLevel levl, CancellationToken token = default)
         {
             //Return this back to the caller
-            return await Connection.BeginTransactionAsync(levl, token);
+            return await Connection.BeginTransactionAsync(levl, token).ConfigureAwait(false);
         }
 #endif
         /// <summary>
