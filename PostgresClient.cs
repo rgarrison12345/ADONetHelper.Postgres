@@ -327,16 +327,6 @@ namespace ADONetHelper.Postgres
         #region Utility Methods
 #if !NET461 && !NETSTANDARD2_0
         /// <summary>
-        /// Asynchronously changes the current database for the current connection
-        /// </summary>
-        /// <param name="databaseName"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public async Task ChangeDatabaseAsync(string databaseName, CancellationToken token = default)
-        {
-            await Connection.ChangeDatabaseAsync(databaseName, token).ConfigureAwait(false);
-        }
-        /// <summary>
         /// Begins the transaction asynchronous.
         /// </summary>
         /// <param name="token">The token.</param>
