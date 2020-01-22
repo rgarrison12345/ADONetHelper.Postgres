@@ -323,6 +323,14 @@ namespace ADONetHelper.Postgres
         public PostgresClient(NpgsqlConnection connection) : base(connection)
         {
         }
+        /// <summary>
+        /// Constructor to query a database using an existing <see cref="NpgsqlConnection"/> to initialize the <paramref name="connection"/> and <paramref name="commandType"/>
+        /// </summary>
+        /// <param name="commandType">Represents how a command should be interpreted by the data provider</param>
+        /// <param name="connection">An instance of <see cref="NpgsqlConnection"/> to use to query a database </param>
+        public PostgresClient(NpgsqlConnection connection, CommandType commandType) : base(connection, commandType)
+        {
+        }
         #endregion
         #region Utility Methods
 #if !NET461 && !NETSTANDARD2_0
